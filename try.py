@@ -1,61 +1,154 @@
-import re
-import pandas as pd
+// Employee.java
+// This class represents an Employee entity and stores employee details
 
-def process_excel(input_file, output_file):
-    # Read Excel
-    df = pd.read_excel(input_file, engine="openpyxl")
+public class Employee {
 
-    # Ensure Hours column exists
-    if "Hours" not in df.columns:
-        raise ValueError("The Excel file must contain a column named 'Hours'.")
+    // Private variables to enforce encapsulation
+    private int empId;
+    private String empName;
+    private double empSalary;
 
-    # Insert Minutes column after Hours
-    hours_index = df.columns.get_loc("Hours")
-    df.insert(hours_index + 1, "Minutes", df["Hours"] * 60)
+    // Constructor to initialize employee object
+    public Employee(int empId, String empName, double empSalary) {
+        this.empId = empId;
+        this.empName = empName;
+        this.empSalary = empSalary;
+    }
 
-    # Add US and DA columns at the end (start with 0)
-    df["US"] = 0.0
-    df["DA"] = 0.0
+    // Getter methods to access private variables
+    public int getEmpId() {
+        return empId;
+    }
 
-    # Regex to detect sequences
-    pattern = re.compile(r"\b\d{8}[A-Z]?\b")
+    public String getEmpName() {
+        return empName;
+    }
 
-    # Function to count valid sequences
-    def count_sequences(text):
-        if pd.isna(text):
-            return 0
-        return len(pattern.findall(str(text)))
-
-    # Step 1: compute row-level US/DA values
-    for i, row in df.iterrows():
-        text = str(row.get("HEHEHE", ""))
-        minutes = row["Minutes"]
-
-        if "US" in text:
-            c = count_sequences(text)
-            if c > 0:
-                df.at[i, "US"] = minutes / c
-
-        if "DA" in text:
-            c = count_sequences(text)
-            if c > 0:
-                df.at[i, "DA"] = minutes / c
-
-    # Step 2: cumulative totals within same Employee + Date
-    if "Employee" in df.columns and "Date" in df.columns:
-        df[["US", "DA"]] = (
-            df.groupby(["Employee", "Date"])[["US", "DA"]]
-              .cumsum()   # cumulative sum
-        )
-
-    # Save result
-    df.to_excel(output_file, index=False, engine="openpyxl")
+    public double getEmpSalary() {
+        return empSalary;
+    }
+}
 
 
-if __name__ == "__main__":
-    input_file = "From.xlsx"   # your input file
-    output_file = "Transformed.xlsx"
-    process_excel(input_file, output_file)
-    print(f"Transformed file saved as {output_file}")
 
-// changes
+// EmployeeOperations.java
+// Abstract class that defines rules for employee management
+
+public abstract class EmployeeOperations {
+
+    // Abstract method to add employee
+    public abstract void addEmployee();
+
+    // Abstract method to display employees
+    public abstract void displayEmployees();
+}
+
+
+// EmployeeService.java
+// This class extends the abstract class and implements its methods
+
+import java.util.Scanner;
+
+public class EmployeeService extends EmployeeOperations {
+
+    // Array to store Employee objects
+    private Employee[] employees = new Employee[100];
+    private int count = 0;
+
+    // Scanner object for user input
+    Scanner sc = new Scanner(System.in);
+
+    // Implementation of addEmployee()
+    @Override
+    public void addEmployee() {
+
+        System.out.print("Enter Employee ID: ");
+        int id = sc.nextInt();
+        sc.nextLine(); // consume newline
+
+        System.out.print("Enter Employee Name: ");
+        String name = sc.nextLine();
+
+        System.out.print("Enter Employee Salary: ");
+        double salary = sc.nextDouble();
+
+        // Creating Employee object
+        employees[count] = new Employee(id, name, salary);
+        count++;
+
+        System.out.println("Employee Added Successfully\n");
+    }
+
+    // Implementation of displayEmployees()
+    @Override
+    public void displayEmployees() {
+
+        if (count == 0) {
+            System.out.println("No Employee Records Found\n");
+            return;
+        }
+
+        System.out.println("ID\tName\tSalary");
+        System.out.println("---------------------------");
+
+        // Loop to display all employee details
+        for (int i = 0; i < count; i++) {
+            System.out.println(
+                    employees[i].getEmpId() + "\t" +
+                    employees[i].getEmpName() + "\t" +
+                    employees[i].getEmpSalary()
+            );
+        }
+        System.out.println();
+    }
+}
+
+
+// MainApp.java
+// Main class that contains menu-driven logic
+
+import java.util.Scanner;
+
+public class MainApp {
+
+    public static void main(String[] args) {
+
+        Scanner sc = new Scanner(System.in);
+
+        // Polymorphism: abstract class reference
+        EmployeeOperations service = new EmployeeService();
+
+        int choice;
+
+        // Program runs continuously until user selects Exit
+        do {
+            System.out.println("1. Add Employee");
+            System.out.println("2. Display Employee");
+            System.out.println("3. Exit");
+            System.out.print("Enter your choice: ");
+
+            choice = sc.nextInt();
+
+            // Switch case for menu operations
+            switch (choice) {
+                case 1:
+                    service.addEmployee();
+                    break;
+
+                case 2:
+                    service.displayEmployees();
+                    break;
+
+                case 3:
+                    System.out.println("Exiting Program...");
+                    break;
+
+                default:
+                    System.out.println("Invalid Choice! Please try again.\n");
+            }
+
+        } while (choice != 3);
+
+        sc.close();
+    }
+}
