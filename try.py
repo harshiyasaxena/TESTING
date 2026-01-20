@@ -1,146 +1,45 @@
-// MainApp.java
-// Entry point of the application
+from openpyxl.styles import Protection
+from openpyxl.worksheet.table import Table, TableStyleInfo
 
-import java.util.Scanner;
+def protect_sheet_column(ws, unlock_col_letters="Q"):
+    max_row = ws.max_row
+    max_col = ws.max_column
 
-public class MainApp {
+    # 1️⃣ Lock everything
+    for row in ws.iter_rows(min_row=1, max_row=max_row, max_col=max_col):
+        for cell in row:
+            cell.protection = Protection(locked=True)
 
-    public static void main(String[] args) {
+    # 2️⃣ Unlock editable column (Q)
+    unlock_col_idx = ord(unlock_col_letters.upper()) - ord("A") + 1
+    for row in ws.iter_rows(min_row=1, max_row=max_row,
+                            min_col=unlock_col_idx, max_col=unlock_col_idx):
+        for cell in row:
+            cell.protection = Protection(locked=False)
 
-        Scanner sc = new Scanner(System.in);
+    # 3️⃣ Unlock header rows where Column A == "Added"
+    for row in ws.iter_rows(min_row=1, max_row=max_row):
+        if row[0].value == "Added":
+            for cell in row:
+                cell.protection = Protection(locked=False)
 
-        // Polymorphism: abstract reference
-        EmployeeOperations service = new EmployeeService(sc);
+    # 4️⃣ Convert used range to Table (filters auto-enabled)
+    end_col_letter = ws.cell(row=1, column=max_col).column_letter
+    table_ref = f"A1:{end_col_letter}{max_row}"
 
-        int choice;
+    table = Table(displayName="AddedTable", ref=table_ref)
 
-        do {
-            System.out.println("1. Add Employee");
-            System.out.println("2. Display Employee");
-            System.out.println("3. Exit");
-            System.out.print("Enter your choice: ");
+    table.tableStyleInfo = TableStyleInfo(
+        name="TableStyleMedium2",
+        showFirstColumn=False,
+        showLastColumn=False,
+        showRowStripes=True,
+        showColumnStripes=False
+    )
 
-            choice = sc.nextInt();
+    ws.add_table(table)
 
-            switch (choice) {
-                case 1:
-                    service.addEmployee();
-                    break;
-
-                case 2:
-                    service.displayEmployees();
-                    break;
-
-                case 3:
-                    System.out.println("Exiting Program...");
-                    break;
-
-                default:
-                    System.out.println("Invalid Choice\n");
-            }
-
-        } while (choice != 3);
-
-        // Optional in small programs
-        sc.close();
-    }
-}
-
-
-// Employee.java
-// Stores employee details using encapsulation
-
-public class Employee {
-
-    private int empId;
-    private String empName;
-    private double empSalary;
-
-    public Employee(int empId, String empName, double empSalary) {
-        this.empId = empId;
-        this.empName = empName;
-        this.empSalary = empSalary;
-    }
-
-    public int getEmpId() {
-        return empId;
-    }
-
-    public String getEmpName() {
-        return empName;
-    }
-
-    public double getEmpSalary() {
-        return empSalary;
-    }
-}
-
-
-// EmployeeOperations.java
-// Abstract class defining employee-related rules
-
-public abstract class EmployeeOperations {
-
-    public abstract void addEmployee();
-
-    public abstract void displayEmployees();
-}
-
-
-// EmployeeService.java
-// Implements abstract methods and manages employee data
-
-import java.util.Scanner;
-
-public class EmployeeService extends EmployeeOperations {
-
-    private Employee[] employees = new Employee[100];
-    private int count = 0;
-
-    // Shared Scanner reference
-    private Scanner sc;
-
-    // Constructor receives Scanner from main
-    public EmployeeService(Scanner sc) {
-        this.sc = sc;
-    }
-
-    @Override
-    public void addEmployee() {
-
-        System.out.print("Enter Employee ID: ");
-        int id = sc.nextInt();
-        sc.nextLine(); // clear buffer
-
-        System.out.print("Enter Employee Name: ");
-        String name = sc.nextLine();
-
-        System.out.print("Enter Employee Salary: ");
-        double salary = sc.nextDouble();
-
-        employees[count++] = new Employee(id, name, salary);
-
-        System.out.println("Employee Added Successfully\n");
-    }
-
-    @Override
-    public void displayEmployees() {
-
-        if (count == 0) {
-            System.out.println("No Employees Found\n");
-            return;
-        }
-
-        System.out.println("ID\tName\tSalary");
-        System.out.println("-------------------------");
-
-        for (int i = 0; i < count; i++) {
-            System.out.println(
-                employees[i].getEmpId() + "\t" +
-                employees[i].getEmpName() + "\t" +
-                employees[i].getEmpSalary()
-            );
-        }
-        System.out.println();
-    }
-}
+    # 5️⃣ Protect sheet (filters still usable)
+    ws.protection.enableAutoFilter = True
+    ws.protection.enable()
+    ws.protection.sheet = True
