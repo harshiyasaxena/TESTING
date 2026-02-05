@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Material Expressive Portfolio</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+
+    <style>
+        /* --- 1. DESIGN TOKENS --- */
+        :root {
+            --surface-rgb: 253, 247, 255;
+            /* Palette */
+            --primary: #6750A4;
+            --on-primary: #FFFFFF;
+            --primary-container: #EADDFF;
+            --on-primary-container: #21005D;
+
+            --secondary: #625B71;
+            --secondary-container: #E8DEF8;
+
+            --tertiary: #7D5260;
+            --tertiary-container: #FFD8E4;
+
+            --surface: #FDF7FF;
+            --surface-variant: #E7E0EC;
+            --on-surface: #1D1B20;
+            --outline: #79747E;
+
+            /* --- THE BOUNCY PHYSICS ENGINE --- */
+            /* The last number (1.6) controls the "overshoot" or bounce magnitude */
+            --bouncy: cubic-bezier(0.175, 0.885, 0.32, 1.6);
+            --standard: cubic-bezier(0.4, 0.0, 0.2, 1);
+
+            /* Shapes */
+            --radius-sm: 8px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-full: 999px;
+        }
+
+        /* --- 2. GLOBAL RESET --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--surface);
+            color: var(--on-surface);
+            line-height: 1.6;
+            overflow-x: hidden;
+            padding-bottom: 80px;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: color 0.3s;
+        }
+
+        /* --- 3. NAVBAR --- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 64px;
+            background: rgba(var(--surface-rgb), 0.85);
+            backdrop-filter: blur(12px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 1.5rem;
+            z-index: 1000;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-logo {
+            font-weight: 900;
+            font-size: 1.25rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: transform 0.4s var(--bouncy);
+        }
+
+        .nav-logo:hover {
+            transform: scale(1.1);
+        }
+
+        .nav-links {
+            display: none;
+            gap: 2rem;
+            font-weight: 500;
+        }
+
+        /* Bouncy Navbar Links */
+        .nav-links a {
+            position: relative;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -4px;
+            left: 50%;
+            background-color: var(--primary);
+            transition: all 0.4s var(--bouncy);
+            transform: translateX(-50%);
+        }
+
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .nav-links a:hover {
+            color: var(--primary);
+        }
+
+        @media (min-width: 768px) {
+            .nav-links {
+                display: flex;
+            }
+        }
+
+        /* --- 4. HERO SECTION (ENTRANCE ANIMATIONS) --- */
+        .hero {
+            padding: 8rem 1.5rem 4rem;
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Staggered Bounce Entrances */
+        .hero h1 {
+            font-size: 3.5rem;
+            line-height: 1.1;
+            font-weight: 900;
+            margin-bottom: 1rem;
+            color: var(--on-surface);
+            letter-spacing: -1px;
+            animation: bounceInUp 0.8s var(--bouncy) forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: var(--secondary);
+            max-width: 600px;
+            margin: 0 auto 2rem;
+            animation: bounceInUp 0.8s var(--bouncy) 0.1s forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .hero-btns {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            animation: bounceInUp 0.8s var(--bouncy) 0.2s forwards;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        /* --- 5. BENTO GRID --- */
+        .layout-section {
+            padding: 4rem 1.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            margin-bottom: 2rem;
+            font-weight: 700;
+            text-align: center;
+        }
+
+        .bento-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+
+        @media (min-width: 700px) {
+            .bento-grid {
+                grid-template-columns: repeat(3, 1fr);
+                grid-template-rows: repeat(2, 300px);
+            }
+
+            .bento-item:nth-child(1) {
+                grid-column: span 2;
+            }
+
+            .bento-item:nth-child(2) {
+                grid-row: span 2;
+            }
+        }
+
+        .bento-item {
+            background: var(--surface-variant);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            transition: transform 0.4s var(--bouncy), box-shadow 0.4s var(--standard);
+            position: relative;
+            overflow: hidden;
+            min-height: 250px;
+            cursor: pointer;
+        }
+
+        /* HOVER EFFECT: Lift and Bounce */
+        .bento-item:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.1);
+            z-index: 2;
+        }
+
+        .card-1 {
+            background: var(--primary-container);
+            color: var(--on-primary-container);
+        }
+
+        .card-2 {
+            background: var(--secondary);
+            color: white;
+        }
+
+        .card-3 {
+            background: #FFD8E4;
+            color: #31111D;
+        }
+
+        .bento-icon {
+            font-size: 3rem;
+            margin-bottom: auto;
+            opacity: 0.8;
+            transition: transform 0.4s var(--bouncy);
+        }
+
+        .bento-item:hover .bento-icon {
+            transform: scale(1.2) rotate(-5deg);
+        }
+
+        .card-1:hover .bento-icon {
+            /* We rotate less (-3deg) and move it right (translateX) so it stays inside */
+            transform: scale(1.15) rotate(-3deg) translateX(10px);
+        }
+
+        /* --- 6. TIC TAC TOE GAME --- */
+        .game-section {
+            padding: 4rem 1.5rem;
+            background: var(--surface-variant);
+            border-radius: var(--radius-lg);
+            margin: 2rem 1rem;
+            text-align: center;
+        }
+
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(3, 100px);
+            grid-template-rows: repeat(3, 100px);
+            gap: 12px;
+            margin: 2rem auto;
+            justify-content: center;
+            position: relative;
+            width: max-content;
+        }
+
+        .cell {
+            width: 100px;
+            height: 100px;
+            background: var(--surface);
+            border-radius: var(--radius-md);
+            border: none;
+            font-size: 3.5rem;
+            font-weight: 900;
+            cursor: pointer;
+            color: var(--on-surface);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s var(--bouncy), background-color 0.2s;
+            box-shadow: 0 4px 0 rgba(0, 0, 0, 0.05);
+        }
+
+        /* Hover Pop */
+        .cell:hover {
+            background: #fff;
+            transform: scale(1.08);
+            z-index: 10;
+        }
+
+        .cell:active {
+            transform: scale(0.9);
+        }
+
+        /* Animation when X or O appears */
+        .cell.x,
+        .cell.o {
+            animation: popIn 0.5s var(--bouncy) forwards;
+        }
+
+        .cell.x {
+            color: var(--primary);
+        }
+
+        .cell.o {
+            color: var(--tertiary);
+        }
+
+        .strike-line {
+            position: absolute;
+            background-color: var(--on-surface);
+            transition: width 0.6s var(--bouncy), height 0.6s var(--bouncy);
+            border-radius: 4px;
+            z-index: 20;
+            pointer-events: none;
+            transform-origin: center;
+        }
+
+        /* Default Hidden */
+        .strike-line {
+            width: 0;
+            height: 8px;
+            transform-origin: left center;
+        }
+
+        /* Wins */
+        .win-row-0 {
+            top: 16%;
+            left: 0;
+            width: 100%;
+        }
+
+        .win-row-1 {
+            top: 50%;
+            left: 0;
+            width: 100%;
+            transform: translateY(-50%);
+        }
+
+        .win-row-2 {
+            bottom: 16%;
+            left: 0;
+            width: 100%;
+        }
+
+        .win-col-0 {
+            left: 16%;
+            top: 0;
+            height: 100%;
+            width: 8px;
+        }
+
+        .win-col-1 {
+            left: 50%;
+            top: 0;
+            height: 100%;
+            width: 8px;
+            transform: translateX(-50%);
+        }
+
+        .win-col-2 {
+            right: 16%;
+            top: 0;
+            height: 100%;
+            width: 8px;
+        }
+
+        .win-diag-0 {
+            top: 0;
+            left: 0;
+            width: 140%;
+            height: 8px;
+            transform: rotate(45deg);
+            transform-origin: 10px 10px;
+        }
+
+        .win-diag-1 {
+            bottom: 0;
+            left: 0;
+            width: 140%;
+            height: 8px;
+            transform: rotate(-45deg);
+            transform-origin: 10px -10px;
+        }
+
+        /* --- UPDATED AVATAR & NAME INPUT CSS --- */
+        .avatar-wrapper {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            /* More space between players */
+            margin-bottom: 2rem;
+            /* REMOVED background color so the label masks blend in */
+            padding: 0.5rem;
+        }
+
+        .player-col {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* Ensure inputs take full width of their column */
+        .player-col .input-group {
+            width: 100%;
+            margin-bottom: 0;
+            /* Remove extra margin */
+        }
+
+        /* Standard left-aligned text looks best for floating labels */
+        .player-col .m3-field {
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        .avatar-list {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .avatar-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 1px solid var(--outline);
+            background: transparent;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s var(--bouncy);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .avatar-btn:hover {
+            transform: scale(1.1);
+            background: var(--surface-variant);
+        }
+
+        .avatar-btn.selected {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            transform: scale(1.15);
+            box-shadow: 0 4px 10px rgba(103, 80, 164, 0.3);
+        }
+
+        @media (max-width: 400px) {
+            .avatar-wrapper {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* --- LEADERBOARD PODIUM CSS --- */
+        .leaderboard-container {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--outline);
+            width: 100%;
+        }
+
+        .podium {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            /* Align to bottom so bars grow up */
+            gap: 1.5rem;
+            height: 180px;
+        }
+
+        .podium-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100px;
+            position: relative;
+            transition: all 0.5s var(--bouncy);
+        }
+
+        .podium-avatar {
+            font-size: 2.5rem;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 4px 4px rgba(0, 0, 0, 0.1));
+            transition: transform 0.3s var(--bouncy);
+        }
+
+        .podium-bar {
+            width: 100%;
+            border-radius: var(--radius-md) var(--radius-md) 0 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            align-items: center;
+            padding-bottom: 10px;
+            color: white;
+            font-weight: 700;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        /* 1st Place Styling */
+        .step-1 .podium-bar {
+            height: 100px;
+            background: linear-gradient(135deg, #FFD700, #FDB931);
+            z-index: 2;
+        }
+
+        .icon-crown {
+            position: absolute;
+            top: -40px;
+            font-size: 1.5rem;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.4s var(--bouncy);
+        }
+
+        .step-1 .icon-crown {
+            opacity: 1;
+            transform: scale(1);
+            animation: bounceInUp 1s infinite alternate;
+        }
+
+        /* 2nd Place Styling */
+        .step-2 .podium-bar {
+            height: 70px;
+            background: linear-gradient(135deg, #E0E0E0, #BDBDBD);
+        }
+
+        .podium-name {
+            margin-top: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-align: center;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 100%;
+        }
+
+        .score {
+            font-size: 1.5rem;
+            line-height: 1;
+        }
+
+        .rank {
+            font-size: 0.75rem;
+            margin-bottom: 4px;
+            opacity: 0.8;
+        }
+
+        /* --- 7. FORM SECTION --- */
+        .form-section {
+            max-width: 600px;
+            margin: 4rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 24px;
+        }
+
+        .m3-field {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid transparent;
+            box-shadow: 0 0 0 1px var(--outline);
+            border-radius: var(--radius-sm);
+            background: transparent;
+            font-size: 1rem;
+            color: var(--on-surface);
+            transition: all 0.3s var(--bouncy);
+        }
+
+        .m3-field:focus {
+            box-shadow: 0 0 0 0 transparent;
+            /* remove outline shadow */
+            border-color: var(--primary);
+            padding: 16px 20px;
+            /* Slight expansion */
+            outline: none;
+            transform: scale(1.02);
+            /* Focus Pop */
+        }
+
+        .m3-label {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: var(--surface);
+            padding: 0 4px;
+            color: var(--outline);
+            transition: 0.3s var(--bouncy);
+            pointer-events: none;
+        }
+
+        .m3-field:focus+.m3-label,
+        .m3-field:not(:placeholder-shown)+.m3-label {
+            top: 0;
+            font-size: 0.8rem;
+            color: var(--primary);
+            font-weight: 700;
+            transform: translateY(-50%) scale(1.1);
+            /* Label pop */
+        }
+
+        /* --- 8. BUTTONS --- */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 28px;
+            height: 52px;
+            border-radius: var(--radius-full);
+            border: none;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: transform 0.4s var(--bouncy), box-shadow 0.4s var(--bouncy);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 8px 15px rgba(103, 80, 164, 0.3);
+        }
+
+        .btn:active {
+            transform: translateY(2px) scale(0.95);
+            box-shadow: 0 2px 5px rgba(103, 80, 164, 0.2);
+        }
+
+        .btn-filled {
+            background: var(--primary);
+            color: var(--on-primary);
+            width: 100%;
+        }
+
+        .btn-tonal {
+            background: var(--secondary-container);
+            color: var(--on-primary-container);
+        }
+
+        /* --- 9. TOAST --- */
+        .toast {
+            position: fixed;
+            bottom: -150px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--on-surface);
+            color: var(--surface);
+            padding: 1.25rem 2.5rem;
+            border-radius: var(--radius-full);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+            z-index: 2000;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: bottom 0.6s var(--bouncy);
+            /* Bouncy entrance */
+            min-width: 320px;
+            justify-content: center;
+            font-weight: 500;
+        }
+
+        .toast.show {
+            bottom: 40px;
+        }
+
+        .toast-icon {
+            font-size: 1.75rem;
+            color: #4caf50;
+            animation: popIn 0.5s var(--bouncy);
+        }
+
+        /* --- 10. KEYFRAMES --- */
+        @keyframes bounceInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes popIn {
+            0% {
+                opacity: 0;
+                transform: scale(0);
+            }
+
+            60% {
+                transform: scale(1.3);
+            }
+
+            /* Big Overshoot */
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* --- PRELOADER CSS --- */
+        #preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--surface);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease-out, visibility 0.5s;
+        }
+
+        .loader-container {
+            display: flex;
+            gap: 12px;
+        }
+
+        .dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            animation: jump 0.6s var(--bouncy) infinite alternate;
+        }
+
+        .dot-1 {
+            background-color: var(--primary);
+            animation-delay: 0s;
+        }
+
+        .dot-2 {
+            background-color: var(--tertiary);
+            animation-delay: 0.2s;
+        }
+
+        .dot-3 {
+            background-color: var(--secondary);
+            animation-delay: 0.4s;
+        }
+
+        @keyframes jump {
+            from {
+                transform: translateY(0) scale(1);
+            }
+
+            to {
+                transform: translateY(-30px) scale(1.2);
+            }
+        }
+
+        /* Class to hide loader */
+        .loaded {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        /* --- THEME SWITCHER CSS --- */
+
+        /* 1. Dark Theme Color Overrides */
+        [data-theme="dark"] {
+            --surface: #141218;
+            --surface-rgb: 20, 18, 24;
+            --surface-variant: #2B2930;
+            /* Darker cards */
+            --on-surface: #E6E1E5;
+            /* Light text */
+            --outline: #938F99;
+
+            /* Primary becomes pastel purple for contrast on dark */
+            --primary: #D0BCFF;
+            --on-primary: #381E72;
+            --primary-container: #4F378B;
+            --on-primary-container: #EADDFF;
+
+            --secondary: #CCC2DC;
+            --secondary-container: #4A4458;
+
+            --tertiary: #EFB8C8;
+            --tertiary-container: #633B48;
+        }
+
+        /* 2. The Button Style */
+        .btn-icon {
+            background: transparent;
+            border: none;
+            color: var(--on-surface);
+            cursor: pointer;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s var(--bouncy), transform 0.3s var(--bouncy);
+            margin-right: 12px;
+            /* Space between toggle and Log In */
+        }
+
+        .btn-icon:hover {
+            background-color: var(--surface-variant);
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        .btn-icon span {
+            font-size: 1.5rem;
+            transition: transform 0.5s var(--bouncy);
+        }
+
+        /* 3. The Ripple Element (Created by JS) */
+        .theme-ripple {
+            position: fixed;
+            border-radius: 50%;
+            transform: scale(0);
+            pointer-events: none;
+            z-index: 9998;
+            /* Below Preloader (9999) but above everything else */
+            /* ease-in makes it start slow and speed up, feeling like a flood */
+            transition: transform 0.6s ease-in;
+        }
+
+        [data-theme="dark"] .card-2 {
+            color: #21005D;
+            /* Dark text looks good on the Light Pastel (Dark Mode) */
+        }
+
+        /* --- SIDE-BY-SIDE LAYOUT CSS --- */
+
+        /* The Wrapper for Game + Leaderboard */
+        .game-content-row {
+            display: flex;
+            flex-wrap: wrap;
+            /* Allows stacking on mobile */
+            align-items: flex-start;
+            /* Align tops */
+            justify-content: center;
+            gap: 3rem;
+            /* Space between the two columns */
+            margin-top: 2rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(0, 0, 0, 0.05);
+            /* Subtle separator from avatars */
+        }
+
+        /* Left Column: Game */
+        .game-area {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Right Column: Leaderboard */
+        .leaderboard-container {
+            flex: 1;
+            min-width: 280px;
+            /* Remove old margin/border logic */
+            margin-top: 0;
+            padding-top: 0;
+            border-top: none;
+
+            /* Optional: Vertical divider line on desktop */
+            border-left: 1px solid var(--outline);
+            padding-left: 3rem;
+        }
+
+        /* Adjust Podium to fit the side column */
+        .podium {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            gap: 1rem;
+            height: 180px;
+        }
+
+        /* --- MOBILE RESPONSIVENESS --- */
+        @media (max-width: 900px) {
+            .game-content-row {
+                flex-direction: column;
+                /* Stack them vertically */
+                gap: 4rem;
+                align-items: center;
+            }
+
+            .leaderboard-container {
+                width: 100%;
+                border-left: none;
+                /* Remove vertical line */
+                padding-left: 0;
+                border-top: 1px solid var(--outline);
+                /* Add horizontal line back */
+                padding-top: 2rem;
+            }
+        }
+
+        /* --- CONFETTI ANIMATION --- */
+        #confetti-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            /* Let clicks pass through */
+            z-index: 9999;
+            /* On top of everything */
+        }
+
+        /* --- FIX FOR MODE BUTTONS --- */
+        .mode-selector {
+            display: flex;
+            justify-content: center;
+            /* Centers them horizontally */
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            width: 100%;
+        }
+
+        .mode-btn {
+            /* CRITICAL: This overrides the global 'width: 100%' that was making them huge */
+            width: auto !important;
+
+            /* Make them compact and uniform */
+            min-width: 120px;
+            height: 40px;
+            padding: 0 16px;
+            font-size: 0.9rem;
+
+            /* Flex layout for icon + text */
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .mode-btn span {
+            font-size: 1.1rem;
+            /* Adjust icon size */
+        }
+
+        /* --- UTILITY TO HIDE ELEMENTS --- */
+        .d-none {
+            display: none !important;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="preloader">
+        <div class="loader-container">
+            <div class="dot dot-1"></div>
+            <div class="dot dot-2"></div>
+            <div class="dot dot-3"></div>
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <div class="nav-logo">
+            <span class="material-symbols-rounded">layers</span>
+        </div>
+        <div class="nav-links">
+            <a href="#layouts">Layouts</a>
+            <a href="#game">Play</a>
+            <a href="#contact">Contact</a>
+        </div>
+        <button class="btn btn-icon" id="themeToggle" aria-label="Toggle Dark Mode">
+            <span class="material-symbols-rounded">dark_mode</span>
+        </button>
+    </nav>
+
+    <section class="hero">
+        <h1>Design. Build. <span>Play.</span></h1>
+        <p>A demonstration of Material Design 3, complex Grid layouts, and bouncy physics.</p>
+        <div class="hero-btns">
+            <a href="#game" class="btn btn-filled" style="width: auto;">Start Playing</a>
+            <a href="#layouts" class="btn btn-tonal">Explore Layouts</a>
+        </div>
+    </section>
+
+    <section id="layouts" class="layout-section">
+        <h2 class="section-title">Smart Layouts</h2>
+        <div class="bento-grid">
+            <div class="bento-item card-1">
+                <span class="material-symbols-rounded bento-icon">dashboard</span>
+                <h3>Responsive Grid</h3>
+                <p>This box spans 2 columns on desktop.</p>
+            </div>
+            <div class="bento-item card-2">
+                <span class="material-symbols-rounded bento-icon">palette</span>
+                <h3>Theming</h3>
+                <p>Dynamic variable-based coloring.</p>
+            </div>
+            <div class="bento-item card-3">
+                <span class="material-symbols-rounded bento-icon">bolt</span>
+                <h3>Bouncy</h3>
+                <p>Aggressive cubic-bezier physics.</p>
+            </div>
+            <div class="bento-item" style="background: white; border: 1px solid var(--outline); color: #000000;">
+                <span class="material-symbols-rounded bento-icon" style="color:var(--primary)">code</span>
+                <h3>Clean Code</h3>
+                <p>Semantic HTML5 structure.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="game" class="game-section">
+        <h2 class="section-title">Tic Tac Toe</h2>
+
+        <div class="mode-selector">
+            <button class="btn btn-filled mode-btn" id="mode-pvp" onclick="setGameMode('pvp')">
+                <span class="material-symbols-rounded">groups</span>
+                2 Players
+            </button>
+            <button class="btn btn-tonal mode-btn" id="mode-cpu" onclick="setGameMode('cpu')">
+                <span class="material-symbols-rounded">smart_toy</span>
+                vs CPU
+            </button>
+        </div>
+
+        <div class="avatar-wrapper">
+            <div class="player-col">
+                <div class="input-group" style="margin-bottom: 8px;">
+                    <input type="text" class="m3-field" id="p1-input" value="Player 1" placeholder=" "
+                        oninput="updateNames()">
+                    <label class="m3-label">Name (X)</label>
+                </div>
+                <div class="avatar-list" id="p1-list">
+                    <button class="avatar-btn selected" onclick="selectAvatar('X', '❌', this)">❌</button>
+                    <button class="avatar-btn" onclick="selectAvatar('X', '🦁', this)">🦁</button>
+                    <button class="avatar-btn" onclick="selectAvatar('X', '🤖', this)">🤖</button>
+                    <button class="avatar-btn" onclick="selectAvatar('X', '⚡', this)">⚡</button>
+                </div>
+            </div>
+            <div class="player-col">
+                <div class="input-group" style="margin-bottom: 8px;">
+                    <input type="text" class="m3-field" id="p2-input" value="Player 2" placeholder=" "
+                        oninput="updateNames()">
+                    <label class="m3-label">Name (O)</label>
+                </div>
+                <div class="avatar-list" id="p2-list">
+                    <button class="avatar-btn selected" onclick="selectAvatar('O', '⭕', this)">⭕</button>
+                    <button class="avatar-btn" onclick="selectAvatar('O', '🦊', this)">🦊</button>
+                    <button class="avatar-btn" onclick="selectAvatar('O', '👽', this)">👽</button>
+                    <button class="avatar-btn" onclick="selectAvatar('O', '🍕', this)">🍕</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="game-content-row">
+
+            <div class="game-area">
+                <p id="game-status"
+                    style="font-size: 1.25rem; font-weight: 500; margin-bottom: 1rem; color: var(--primary); min-height: 1.5em; text-align: center;">
+                    Player 1's Turn
+                </p>
+
+                <div class="game-board" id="board">
+                    <div class="strike-line" id="strikeLine"></div>
+                    <button class="cell" data-i="0"></button>
+                    <button class="cell" data-i="1"></button>
+                    <button class="cell" data-i="2"></button>
+                    <button class="cell" data-i="3"></button>
+                    <button class="cell" data-i="4"></button>
+                    <button class="cell" data-i="5"></button>
+                    <button class="cell" data-i="6"></button>
+                    <button class="cell" data-i="7"></button>
+                    <button class="cell" data-i="8"></button>
+                </div>
+
+                <button class="btn btn-tonal" onclick="resetGame()" style="margin-top: 1rem; max-width: 200px;">Restart
+                    Game</button>
+            </div>
+
+            <div class="leaderboard-container">
+                <h3
+                    style="text-align: center; color: var(--outline); font-size: 0.8rem; margin-bottom: 1.5rem; letter-spacing: 1.5px; font-weight: 700;">
+                    LEADERBOARD</h3>
+
+                <div class="podium">
+                    <div class="podium-step step-2" id="podium-2">
+                        <div class="icon-crown">👑</div>
+                        <div class="podium-avatar" id="p2-podium-avatar">⭕</div>
+                        <div class="podium-bar">
+                            <span class="rank" id="p2-rank">2nd</span>
+                            <span class="score" id="p2-podium-score">0</span>
+                        </div>
+                        <div class="podium-name" id="p2-podium-name">Player 2</div>
+                    </div>
+
+                    <div class="podium-step step-1" id="podium-1">
+                        <div class="icon-crown">👑</div>
+                        <div class="podium-avatar" id="p1-podium-avatar">❌</div>
+                        <div class="podium-bar">
+                            <span class="rank" id="p1-rank">1st</span>
+                            <span class="score" id="p1-podium-score">0</span>
+                        </div>
+                        <div class="podium-name" id="p1-podium-name">Player 1</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="contact" class="form-section">
+        <h2 class="section-title">Contact Us</h2>
+        <form onsubmit="handleForm(event)">
+            <div class="input-group">
+                <input type="text" class="m3-field" id="name" placeholder=" " required>
+                <label for="name" class="m3-label">Name</label>
+            </div>
+            <div class="input-group">
+                <input type="email" class="m3-field" id="email" placeholder=" " required>
+                <label for="email" class="m3-label">Email</label>
+            </div>
+            <div class="input-group">
+                <textarea class="m3-field" id="msg" placeholder=" " rows="3" required></textarea>
+                <label for="msg" class="m3-label">Message</label>
+            </div>
+            <button type="submit" class="btn btn-filled">Send Message</button>
+        </form>
+    </section>
+
+    <footer style="text-align: center; padding: 2rem; color: var(--secondary);">
+        <p>&copy; 2024 Material Expressive.</p>
+    </footer>
+
+    <div id="toast" class="toast">
+        <span class="material-symbols-rounded toast-icon">trophy</span>
+        <span id="toastMsg">Player X Wins!</span>
+    </div>
+
+    <canvas id="confetti-canvas"></canvas>
+
+
+    <script>
+        /* --- COMPLETE GAME LOGIC (PvP + CPU + Leaderboard + Confetti) --- */
+        const cells = document.querySelectorAll('.cell');
+        const strikeLine = document.getElementById('strikeLine');
+        const statusText = document.getElementById('game-status');
+        const boardElement = document.getElementById('board');
+
+        // Game State
+        let boardState = [];
+        let currentPlayer = 'X';
+        let isGameActive = true;
+        let currentSize = 3;
+        let isCpuMode = false; // Default: 2 Player
+
+        // Player Data (Default)
+        let p1Avatar = '❌';
+        let p2Avatar = '⭕';
+        let p1Name = "Player 1";
+        let p2Name = "Player 2";
+
+        // Load Scores
+        let p1Score = parseInt(localStorage.getItem('p1Score')) || 0;
+        let p2Score = parseInt(localStorage.getItem('p2Score')) || 0;
+
+        /* --- REPLACED FUNCTION --- */
+        function setGameMode(mode) {
+            isCpuMode = (mode === 'cpu');
+
+            // 1. Update Button Styles
+            const btnPvp = document.getElementById('mode-pvp');
+            const btnCpu = document.getElementById('mode-cpu');
+
+            if (isCpuMode) {
+                btnPvp.classList.replace('btn-filled', 'btn-tonal');
+                btnCpu.classList.replace('btn-tonal', 'btn-filled');
+            } else {
+                btnPvp.classList.replace('btn-tonal', 'btn-filled');
+                btnCpu.classList.replace('btn-filled', 'btn-tonal');
+            }
+
+            // 2. Toggle UI Visibility (Leaderboard & Avatars)
+            const avatarWrapper = document.querySelector('.avatar-wrapper');
+            const leaderboard = document.querySelector('.leaderboard-container');
+
+            if (isCpuMode) {
+                // HIDE in CPU Mode
+                avatarWrapper.classList.add('d-none');
+                leaderboard.classList.add('d-none');
+
+                // Set CPU Name
+                p2Name = "CPU Bot";
+            } else {
+                // SHOW in PvP Mode
+                avatarWrapper.classList.remove('d-none');
+                leaderboard.classList.remove('d-none');
+
+                // Restore Player 2 Name from input
+                p2Name = document.getElementById('p2-input').value || "Player 2";
+            }
+
+            // 3. Reset Game
+            updateNames();
+            resetGame();
+        }
+
+        function makeCpuMove() {
+            if (!isGameActive) return;
+
+            // A. Win? -> B. Block? -> C. Random
+            let move = findBestMove('O'); // Try to win
+            if (move === -1) move = findBestMove('X'); // Block X
+
+            if (move === -1) {
+                // Pick random empty spot
+                const available = boardState.map((v, i) => v === null ? i : null).filter(v => v !== null);
+                move = available[Math.floor(Math.random() * available.length)];
+            }
+
+            // Act like a human (delayed click)
+            setTimeout(() => {
+                const cell = document.querySelector(`.cell[data-i="${move}"]`);
+                if (cell) cell.click();
+            }, 600);
+        }
+
+        function findBestMove(player) {
+            // Check every empty spot
+            for (let i = 0; i < currentSize * currentSize; i++) {
+                if (boardState[i] === null) {
+                    boardState[i] = player; // Place piece
+                    if (checkWinConditionInternal(player)) {
+                        boardState[i] = null; // Undo
+                        return i; // Found it!
+                    }
+                    boardState[i] = null; // Undo
+                }
+            }
+            return -1;
+        }
+
+        function checkWinConditionInternal(player) {
+            const size = currentSize;
+            // Check Rows, Cols, Diagonals
+            const checkLine = (indices) => indices.every(idx => boardState[idx] === player);
+
+            for (let i = 0; i < size; i++) {
+                // Row
+                if (checkLine([...Array(size).keys()].map(k => i * size + k))) return true;
+                // Col
+                if (checkLine([...Array(size).keys()].map(k => k * size + i))) return true;
+            }
+            // Diagonals
+            if (checkLine([...Array(size).keys()].map(k => k * size + k))) return true;
+            if (checkLine([...Array(size).keys()].map(k => k * size + (size - 1 - k)))) return true;
+
+            return false;
+        }
+
+
+
+        // --- LEADERBOARD FUNCTIONS ---
+
+        /* --- UPDATED LEADERBOARD LOGIC --- */
+        function updateLeaderboard() {
+            // Get Elements
+            const p1Podium = document.getElementById('podium-1');
+            const p2Podium = document.getElementById('podium-2');
+
+            const p1Rank = document.getElementById('p1-rank');
+            const p2Rank = document.getElementById('p2-rank');
+
+            // Update Avatars/Names/Scores (Standard)
+            document.getElementById('p1-podium-name').textContent = p1Name;
+            document.getElementById('p1-podium-avatar').textContent = p1Avatar;
+            document.getElementById('p1-podium-score').textContent = p1Score;
+
+            document.getElementById('p2-podium-name').textContent = p2Name;
+            document.getElementById('p2-podium-avatar').textContent = p2Avatar;
+            document.getElementById('p2-podium-score').textContent = p2Score;
+
+            // --- TIE / RANKING LOGIC ---
+
+            // Scenario 1: TIE (Both are 1st)
+            if (p1Score === p2Score) {
+                // Make P1 Gold
+                p1Podium.classList.remove('step-2');
+                p1Podium.classList.add('step-1');
+                p1Rank.textContent = "1st";
+
+                // Make P2 Gold
+                p2Podium.classList.remove('step-2');
+                p2Podium.classList.add('step-1');
+                p2Rank.textContent = "1st";
+            }
+            // Scenario 2: Player 1 Leads
+            else if (p1Score > p2Score) {
+                // P1 Gold
+                p1Podium.classList.remove('step-2');
+                p1Podium.classList.add('step-1');
+                p1Rank.textContent = "1st";
+
+                // P2 Silver
+                p2Podium.classList.remove('step-1');
+                p2Podium.classList.add('step-2');
+                p2Rank.textContent = "2nd";
+            }
+            // Scenario 3: Player 2 Leads
+            else {
+                // P1 Silver
+                p1Podium.classList.remove('step-1');
+                p1Podium.classList.add('step-2');
+                p1Rank.textContent = "2nd";
+
+                // P2 Gold
+                p2Podium.classList.remove('step-2');
+                p2Podium.classList.add('step-1');
+                p2Rank.textContent = "1st";
+            }
+        }
+
+        /* --- REPLACED FUNCTION --- */
+        function updateScores(winner) {
+            // STOP if in CPU Mode (Don't save score)
+            if (isCpuMode) return;
+
+            if (winner === 'X') {
+                p1Score++;
+            } else {
+                p2Score++;
+            }
+
+            // Save to Storage
+            localStorage.setItem('p1Score', p1Score);
+            localStorage.setItem('p2Score', p2Score);
+
+            updateLeaderboard();
+        }
+
+        // Hook into existing input updates
+        /* --- REPLACED FUNCTION --- */
+        function updateNames() {
+            // 1. Get Player 1 Name (Always from input)
+            p1Name = document.getElementById('p1-input').value || "Player 1";
+
+            // 2. Get Player 2 Name (Conditional)
+            if (isCpuMode) {
+                p2Name = "CPU Bot"; // Force CPU name
+            } else {
+                p2Name = document.getElementById('p2-input').value || "Player 2"; // Read input
+            }
+
+            // 3. Update Status Text
+            if (isGameActive && boardState.every(val => val === null)) {
+                statusText.textContent = `${p1Name} (${p1Avatar}) Starts`;
+            } else if (isGameActive) {
+                const currentName = currentPlayer === 'X' ? p1Name : p2Name;
+                const currentAvatar = currentPlayer === 'X' ? p1Avatar : p2Avatar;
+                statusText.textContent = `${currentName}'s Turn (${currentAvatar})`;
+            }
+
+            // 4. Update Leaderboard (if visible)
+            if (!isCpuMode) {
+                updateLeaderboard();
+            }
+        }
+
+        function selectAvatar(player, icon, btn) {
+            if (!isGameActive && !boardState.every(val => val === null)) {
+                showToast("Reset game to change avatars!", false);
+                return;
+            }
+            if (player === 'X') {
+                p1Avatar = icon;
+                document.querySelectorAll('#p1-list .avatar-btn').forEach(b => b.classList.remove('selected'));
+            } else {
+                p2Avatar = icon;
+                document.querySelectorAll('#p2-list .avatar-btn').forEach(b => b.classList.remove('selected'));
+            }
+            btn.classList.add('selected');
+            updateNames(); // Refresh text & Podium
+        }
+
+        // --- GAME CORE ---
+
+        function startGame(size) {
+            currentSize = size;
+            boardState = Array(size * size).fill(null);
+            currentPlayer = 'X';
+            isGameActive = true;
+
+            // Build Grid
+            boardElement.innerHTML = '';
+            boardElement.style.gridTemplateColumns = `repeat(${size}, 1fr)`;
+            const cellSize = size === 5 ? '60px' : (size === 4 ? '70px' : '80px');
+            const fontSize = size === 5 ? '1.5rem' : '2.5rem';
+
+            for (let i = 0; i < size * size; i++) {
+                const cell = document.createElement('button');
+                cell.classList.add('cell');
+                cell.dataset.i = i;
+                cell.style.width = cellSize;
+                cell.style.height = cellSize;
+                cell.style.fontSize = fontSize;
+                cell.addEventListener('click', handleCellClick);
+                boardElement.appendChild(cell);
+            }
+            updateNames();
+            updateLeaderboard();
+        }
+
+        function handleCellClick(e) {
+            const cell = e.target;
+            const i = parseInt(cell.dataset.i);
+
+            // Block interaction if game over OR occupied OR (Cpu mode + O turn + Human clicked)
+            if (boardState[i] || !isGameActive) return;
+            if (isCpuMode && currentPlayer === 'O' && e.isTrusted) return;
+
+            // Execute Move
+            boardState[i] = currentPlayer;
+            cell.textContent = currentPlayer === 'X' ? p1Avatar : p2Avatar;
+            cell.classList.add(currentPlayer.toLowerCase());
+
+            // Check Result
+            if (checkWinDynamic()) {
+                isGameActive = false;
+                const winnerName = currentPlayer === 'X' ? p1Name : p2Name;
+                const winnerAvatar = currentPlayer === 'X' ? p1Avatar : p2Avatar;
+                statusText.textContent = `${winnerName} (${winnerAvatar}) Wins!`;
+                showToast(`${winnerName} Wins!`, true);
+                updateScores(currentPlayer);
+            } else if (!boardState.includes(null)) {
+                statusText.textContent = "It's a Draw!";
+                showToast("It's a Draw!", false);
+                isGameActive = false;
+            } else {
+                // Next Turn
+                currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+                const nextName = currentPlayer === 'X' ? p1Name : p2Name;
+                const nextAvatar = currentPlayer === 'X' ? p1Avatar : p2Avatar;
+                statusText.textContent = `${nextName}'s Turn (${nextAvatar})`;
+
+                // Trigger CPU?
+                if (isCpuMode && currentPlayer === 'O') {
+                    makeCpuMove();
+                }
+            }
+        }
+
+        function checkWinDynamic() {
+            const size = currentSize;
+            const cells = document.querySelectorAll('.cell');
+
+            const checkLine = (indices) => {
+                const first = boardState[indices[0]];
+                if (!first) return false;
+                if (indices.every(idx => boardState[idx] === first)) {
+                    indices.forEach(idx => cells[idx].classList.add('winning-cell', first.toLowerCase()));
+                    startCelebration(); // Confetti!
+                    return true;
+                }
+                return false;
+            };
+
+            // Logic for Rows/Cols/Diagonals
+            for (let i = 0; i < size; i++) {
+                if (checkLine([...Array(size).keys()].map(k => i * size + k))) return true; // Row
+                if (checkLine([...Array(size).keys()].map(k => k * size + i))) return true; // Col
+            }
+            if (checkLine([...Array(size).keys()].map(k => k * size + k))) return true; // Diag 1
+            if (checkLine([...Array(size).keys()].map(k => k * size + (size - 1 - k)))) return true; // Diag 2
+
+            return false;
+        }
+
+        function resetGame() {
+            startGame(currentSize);
+        }
+
+        // Initial Start
+        startGame(3);
+
+        /* --- TOAST LOGIC --- */
+        const toast = document.getElementById('toast');
+        const toastMsg = document.getElementById('toastMsg');
+
+        function showToast(msg, isWin) {
+            toastMsg.textContent = msg;
+            toast.classList.add('show');
+            setTimeout(hideToast, 3000);
+        }
+
+        function hideToast() {
+            toast.classList.remove('show');
+        }
+
+        /* --- FORM LOGIC --- */
+        function handleForm(e) {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.innerText;
+
+            btn.innerText = "Sending...";
+            // Add a little visual interaction
+            btn.style.transform = "scale(0.95)";
+
+            setTimeout(() => {
+                btn.innerText = "Message Sent!";
+                btn.style.backgroundColor = "#4caf50";
+                btn.style.transform = "scale(1)";
+                e.target.reset();
+                setTimeout(() => {
+                    btn.innerText = originalText;
+                    btn.style.backgroundColor = "";
+                }, 2000);
+            }, 800);
+        }
+
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('preloader');
+            // Minimal timeout to ensure the animation is seen for a split second
+            setTimeout(() => {
+                preloader.classList.add('loaded');
+            }, 800);
+        });
+
+        /* --- THEME SWITCHER LOGIC --- */
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+        let isDark = false;
+
+        themeToggle.addEventListener('click', (e) => {
+            // 1. Create the ripple element
+            const ripple = document.createElement('div');
+            ripple.classList.add('theme-ripple');
+            document.body.appendChild(ripple);
+
+            // 2. Determine the new theme color for the ripple background
+            // We hardcode these to match the CSS variables for a seamless switch
+            const lightBg = '#FDF7FF';
+            const darkBg = '#141218';
+            ripple.style.backgroundColor = isDark ? lightBg : darkBg;
+
+            // 3. Calculate position and size
+            // We need the ripple to cover the screen from the click point
+            const rect = themeToggle.getBoundingClientRect();
+            const x = rect.left + rect.width / 2;
+            const y = rect.top + rect.height / 2;
+
+            // Calculate distance to furthest corner
+            const w = Math.max(x, window.innerWidth - x);
+            const h = Math.max(y, window.innerHeight - y);
+            const radius = Math.sqrt(w * w + h * h);
+
+            ripple.style.width = `${radius * 2}px`;
+            ripple.style.height = `${radius * 2}px`;
+            ripple.style.left = `${x - radius}px`;
+            ripple.style.top = `${y - radius}px`;
+
+            // 4. Trigger Animation
+            // Force reflow to ensure the scale(0) is applied before switching
+            requestAnimationFrame(() => {
+                ripple.style.transform = 'scale(1)';
+            });
+
+            // 5. Toggle Theme Class mid-animation
+            setTimeout(() => {
+                isDark = !isDark;
+                if (isDark) {
+                    body.setAttribute('data-theme', 'dark');
+                    themeToggle.querySelector('span').innerText = 'light_mode';
+                } else {
+                    body.removeAttribute('data-theme');
+                    themeToggle.querySelector('span').innerText = 'dark_mode';
+                }
+
+                // 6. Cleanup
+                // We fade out the ripple so it doesn't block clicks (though pointer-events: none handles that)
+                // Removing it instantly is fine because the body bg is now the same color
+                setTimeout(() => {
+                    ripple.remove();
+                }, 50);
+            }, 600); // Matches the CSS transition duration
+        });
+
+        /* --- CONFETTI ENGINE (With Smooth Fade) --- */
+        const confettiCanvas = document.getElementById('confetti-canvas');
+        const ctx = confettiCanvas.getContext('2d');
+        let confettiParticles = [];
+        let animationId;
+        let confettiStartTime; // To track duration
+
+        // Resize canvas to fit screen
+        function resizeCanvas() {
+            confettiCanvas.width = window.innerWidth;
+            confettiCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas();
+
+        function createConfetti() {
+            const colors = ['#ff0000', '#00ff00', '#0000ff', '#ffff00', '#ff00ff', '#00ffff'];
+            for (let i = 0; i < 150; i++) {
+                confettiParticles.push({
+                    x: Math.random() * confettiCanvas.width,
+                    y: Math.random() * confettiCanvas.height - confettiCanvas.height,
+                    color: colors[Math.floor(Math.random() * colors.length)],
+                    size: Math.random() * 10 + 5,
+                    speedY: Math.random() * 3 + 2,
+                    speedX: Math.random() * 2 - 1,
+                    rotation: Math.random() * 360,
+                    rotationSpeed: Math.random() * 10 - 5
+                });
+            }
+        }
+
+        function updateConfetti() {
+            ctx.clearRect(0, 0, confettiCanvas.width, confettiCanvas.height);
+
+            // --- FADE OUT LOGIC ---
+            const elapsed = Date.now() - confettiStartTime;
+
+            // After 2000ms (2 seconds), start fading out over 1 second
+            if (elapsed > 1000) {
+                // Calculate opacity: 1 down to 0
+                const fade = 1 - (elapsed - 2000) / 1000;
+                ctx.globalAlpha = Math.max(0, fade);
+            } else {
+                ctx.globalAlpha = 1;
+            }
+
+            // Stop animation if invisible
+            if (ctx.globalAlpha <= 0) {
+                cancelAnimationFrame(animationId);
+                animationId = null;
+                ctx.globalAlpha = 1; // Reset for next time
+                return;
+            }
+            // ----------------------
+
+            confettiParticles.forEach((p) => {
+                p.y += p.speedY;
+                p.x += p.speedX;
+                p.rotation += p.rotationSpeed;
+
+                ctx.save();
+                ctx.translate(p.x, p.y);
+                ctx.rotate(p.rotation * Math.PI / 180);
+                ctx.fillStyle = p.color;
+                ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+                ctx.restore();
+
+                // Reset particle to top if it falls off screen
+                if (p.y > confettiCanvas.height) {
+                    p.y = -10;
+                    p.x = Math.random() * confettiCanvas.width;
+                }
+            });
+
+            animationId = requestAnimationFrame(updateConfetti);
+        }
+
+        function startCelebration() {
+            confettiParticles = []; // Clear old particles
+            createConfetti();
+            confettiStartTime = Date.now(); // Mark start time
+
+            if (!animationId) {
+                ctx.globalAlpha = 1; // Ensure full opacity at start
+                updateConfetti();
+            }
+        }
+    </script>
+</body>
+
+</html>
